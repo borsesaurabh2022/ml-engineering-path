@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# Data and model artifacts
+data/
+*.pt
+*.pth
+*.onnx
+*.ckpt
+
+# Tools
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Editor / OS
+.vscode/
+.DS_Store
