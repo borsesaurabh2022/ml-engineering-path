@@ -8,6 +8,9 @@ from torch.utils.data import DataLoader, TensorDataset
 from src.data import make_moons, train_val_test_split
 from src.model import MLP
 
+import argparse
+
+
 
 def accuracy(logits: torch.Tensor, y: torch.Tensor) -> float:
     """Fraction of rows where the highest logit is the correct class."""
@@ -39,6 +42,12 @@ def evaluate(model: nn.Module, X: torch.Tensor, y: torch.Tensor,
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Train an MLP on two moons.")
+    parser.add_argument("--hidden", type=int, nargs="*", default=[16, 16],
+                        help="hidden layer sizes, e.g. --hidden 16 16; empty = no hidden layer")
+    args = parser.parse_args()
+    name = "mlp_" + ("-".join(map(str, args.hidden)) or "linear")
+
     torch.manual_seed(0)
     generator = torch.Generator().manual_seed(0)
     X, y = make_moons(1000, noise=0.2, generator=generator)
@@ -47,7 +56,8 @@ if __name__ == "__main__":
 
     loader = DataLoader(TensorDataset(X_train, y_train), batch_size=32, shuffle=True,
                         generator=torch.Generator().manual_seed(0))
-    model = MLP(2, [16, 16], 2)
+    model = MLP(2, args.hidden, 2)
+
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
@@ -63,7 +73,8 @@ if __name__ == "__main__":
                   f"val loss {val_loss:.4f} | val acc {val_acc:.3f}")
 
     Path("checkpoints").mkdir(exist_ok=True)
-    torch.save(model.state_dict(), "checkpoints/mlp.pt")
+    torch.save(model.state_dict(), f"checkpoints/{name}.pt")
+
 
     fig, (ax_loss, ax_acc) = plt.subplots(1, 2, figsize=(11, 4))
     ax_loss.plot(history["train_loss"], label="train")
@@ -75,5 +86,5 @@ if __name__ == "__main__":
     ax_acc.set_xlabel("epoch")
     ax_acc.set_ylabel("validation accuracy")
     Path("figures").mkdir(exist_ok=True)
-    fig.savefig("figures/training_curves.png", dpi=150, bbox_inches="tight")
+    fig.savefig(f"figures/{name}_training_curves.png", dpi=150, bbox_inches="tight")
     plt.show()

@@ -11,10 +11,11 @@ if __name__ == "__main__":
     _, (X_val, y_val), _ = train_val_test_split(
         X, y, val_frac=0.15, test_frac=0.15, generator=generator)
 
-    model = MLP(2, [16, 16], 2)
-    model.load_state_dict(torch.load("checkpoints/mlp.pt", weights_only=True))
-
-    fig, ax = plt.subplots(figsize=(7, 5))
-    plot_decision_boundary(model, X_val, y_val, ax, "MLP [16, 16]: validation split")
-    fig.savefig("figures/decision_boundary.png", dpi=150, bbox_inches="tight")
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+    for ax, hidden in zip(axes, [[], [16, 16]]):
+        name = "mlp_" + ("-".join(map(str, hidden)) or "linear")
+        model = MLP(2, hidden, 2)
+        model.load_state_dict(torch.load(f"checkpoints/{name}.pt", weights_only=True))
+        plot_decision_boundary(model, X_val, y_val, ax, f"{name}: validation split")
+    fig.savefig("figures/decision_boundary_comparison.png", dpi=150, bbox_inches="tight")
     plt.show()
