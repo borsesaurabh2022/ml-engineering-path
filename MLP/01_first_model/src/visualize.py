@@ -38,6 +38,25 @@ def draw_mlp(model: nn.Module, ax: plt.Axes) -> None:
     ax.set_title(f"MLP {sizes}: {n_params} parameters (blue = positive, red = negative weight)")
 
 
+@torch.no_grad()
+def plot_decision_boundary(model: nn.Module, X: torch.Tensor, y: torch.Tensor,
+                           ax: plt.Axes, title: str) -> None:
+    """Colour the input plane by predicted P(class 1); black line = boundary at 0.5."""
+    model.eval()
+    x0_min, x0_max = X[:, 0].min().item() - 0.5, X[:, 0].max().item() + 0.5
+    x1_min, x1_max = X[:, 1].min().item() - 0.5, X[:, 1].max().item() + 0.5
+    g0, g1 = torch.meshgrid(torch.linspace(x0_min, x0_max, 300),
+                            torch.linspace(x1_min, x1_max, 300), indexing="xy")
+    grid = torch.stack([g0.ravel(), g1.ravel()], dim=1)  # (90000, 2)
+    p1 = torch.softmax(model(grid), dim=1)[:, 1].reshape(g0.shape)
+
+    ax.contourf(g0, g1, p1, levels=20, cmap="coolwarm", alpha=0.6)
+    ax.contour(g0, g1, p1, levels=[0.5], colors="black", linewidths=1.5)
+    ax.scatter(X[:, 0], X[:, 1], c=y, cmap="coolwarm", edgecolors="black", s=15)
+    ax.set_title(title)
+
+
+
 if __name__ == "__main__":
     torch.manual_seed(0)
     model = MLP(2, [16, 16], 2)
