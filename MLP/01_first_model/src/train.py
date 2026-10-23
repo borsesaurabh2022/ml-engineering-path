@@ -15,8 +15,9 @@ def accuracy(logits: torch.Tensor, y: torch.Tensor) -> float:
     return (logits.argmax(dim=1) == y).float().mean().item()
 
 
-def train_one_epoch(model: nn.Module, loader: DataLoader, loss_fn: nn.Module,
-                    optimizer: torch.optim.Optimizer) -> float:
+def train_one_epoch(
+    model: nn.Module, loader: DataLoader, loss_fn: nn.Module, optimizer: torch.optim.Optimizer
+) -> float:
     """One pass over the training data. Returns mean loss per sample."""
     model.train()
     total_loss = 0.0
@@ -31,8 +32,9 @@ def train_one_epoch(model: nn.Module, loader: DataLoader, loss_fn: nn.Module,
 
 
 @torch.no_grad()
-def evaluate(model: nn.Module, X: torch.Tensor, y: torch.Tensor,
-             loss_fn: nn.Module) -> tuple[float, float]:
+def evaluate(
+    model: nn.Module, X: torch.Tensor, y: torch.Tensor, loss_fn: nn.Module
+) -> tuple[float, float]:
     """Loss and accuracy on a full split, without tracking gradients."""
     model.eval()
     logits = model(X)
@@ -41,8 +43,13 @@ def evaluate(model: nn.Module, X: torch.Tensor, y: torch.Tensor,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train an MLP on two moons.")
-    parser.add_argument("--hidden", type=int, nargs="*", default=[16, 16],
-                        help="hidden layer sizes, e.g. --hidden 16 16; empty = no hidden layer")
+    parser.add_argument(
+        "--hidden",
+        type=int,
+        nargs="*",
+        default=[16, 16],
+        help="hidden layer sizes, e.g. --hidden 16 16; empty = no hidden layer",
+    )
     args = parser.parse_args()
     name = "mlp_" + ("-".join(map(str, args.hidden)) or "linear")
 
@@ -50,10 +57,15 @@ if __name__ == "__main__":
     generator = torch.Generator().manual_seed(0)
     X, y = make_moons(1000, noise=0.2, generator=generator)
     (X_train, y_train), (X_val, y_val), _ = train_val_test_split(
-        X, y, val_frac=0.15, test_frac=0.15, generator=generator)  # test set untouched
+        X, y, val_frac=0.15, test_frac=0.15, generator=generator
+    )  # test set untouched
 
-    loader = DataLoader(TensorDataset(X_train, y_train), batch_size=32, shuffle=True,
-                        generator=torch.Generator().manual_seed(0))
+    loader = DataLoader(
+        TensorDataset(X_train, y_train),
+        batch_size=32,
+        shuffle=True,
+        generator=torch.Generator().manual_seed(0),
+    )
     model = MLP(2, args.hidden, 2)
 
     loss_fn = nn.CrossEntropyLoss()
@@ -67,12 +79,13 @@ if __name__ == "__main__":
         history["val_loss"].append(val_loss)
         history["val_acc"].append(val_acc)
         if epoch == 1 or epoch % 10 == 0:
-            print(f"epoch {epoch:3d} | train loss {train_loss:.4f} | "
-                  f"val loss {val_loss:.4f} | val acc {val_acc:.3f}")
+            print(
+                f"epoch {epoch:3d} | train loss {train_loss:.4f} | "
+                f"val loss {val_loss:.4f} | val acc {val_acc:.3f}"
+            )
 
     Path("checkpoints").mkdir(exist_ok=True)
     torch.save(model.state_dict(), f"checkpoints/{name}.pt")
-
 
     fig, (ax_loss, ax_acc) = plt.subplots(1, 2, figsize=(11, 4))
     ax_loss.plot(history["train_loss"], label="train")

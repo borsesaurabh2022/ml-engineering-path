@@ -4,3 +4,4 @@ numpy==2.5.4
 matplotlib==3.11.2
 pytest==9.1.1
 ruff==0.17.2
+pre-commit==4.7.0

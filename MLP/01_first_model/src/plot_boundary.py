@@ -9,7 +9,8 @@ if __name__ == "__main__":
     generator = torch.Generator().manual_seed(0)
     X, y = make_moons(1000, noise=0.2, generator=generator)
     _, (X_val, y_val), _ = train_val_test_split(
-        X, y, val_frac=0.15, test_frac=0.15, generator=generator)
+        X, y, val_frac=0.15, test_frac=0.15, generator=generator
+    )
 
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
     for ax, hidden in zip(axes, [[], [16, 16]], strict=True):
