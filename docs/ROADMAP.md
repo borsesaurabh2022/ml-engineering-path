@@ -35,7 +35,7 @@ Each stage folder contains `src/`, `tests/` and `README.md` (goal, how to run, r
 ## Plan
 | # | Architecture | Stage | Key tools introduced | Started | Status |
 |---|---|---|---|---|---|
-| 1 | MLP | 01 First model | git CLI, venv, pytest | 21 Oct | in progress |
+| 1 | MLP | 01 First model | git CLI, venv, pytest | 21 Oct | done |
 | 2 | MLP | 02 Regression + classification | TensorBoard, ruff, pre-commit | | not started |
 | 3 | MLP | 03 Pipeline + features | scikit-learn transforms, Optuna | | not started |
 | 4 | MLP | 04 End-to-end | PostgreSQL, FastAPI, Docker, DVC, MLflow | | not started |
@@ -62,3 +62,4 @@ Each stage folder contains `src/`, `tests/` and `README.md` (goal, how to run, r
 | Date | Stage | Result | Next |
 |---|---|---|---|
 | 21 Oct | Setup | Tools checked, venv, requirements.txt, first commit | MLP 01 |
+| 23 Oct | MLP 01 | MLP [16, 16]: test acc 0.947 (val 0.967); linear baseline val 0.84; 9 tests passing | MLP 02 |
