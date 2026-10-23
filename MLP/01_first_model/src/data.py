@@ -23,8 +23,10 @@ def make_moons(n_samples: int, noise: float, generator: torch.Generator) -> Spli
     return X, y
 
 
-def train_val_test_split(X: torch.Tensor, y: torch.Tensor, val_frac: float,
-                         test_frac: float, generator: torch.Generator) -> tuple[Split, Split, Split]:
+def train_val_test_split(
+        X: torch.Tensor, y: torch.Tensor, val_frac: float, test_frac: float,
+        generator: torch.Generator
+) -> tuple[Split, Split, Split]:
     """Shuffle once, then cut into train / validation / test."""
     perm = torch.randperm(len(X), generator=generator)
     n_test = int(len(X) * test_frac)

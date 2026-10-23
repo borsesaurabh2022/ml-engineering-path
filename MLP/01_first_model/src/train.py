@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -7,9 +8,6 @@ from torch.utils.data import DataLoader, TensorDataset
 
 from src.data import make_moons, train_val_test_split
 from src.model import MLP
-
-import argparse
-
 
 
 def accuracy(logits: torch.Tensor, y: torch.Tensor) -> float:

@@ -1,5 +1,6 @@
-import torch 
+import torch
 from torch import nn
+
 
 class MLP(nn.Module):
     """Multi-layer perceptron: (Linear -> ReLU) blocks followed by a final Linear layer."""
@@ -19,4 +20,3 @@ class MLP(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.model(x) #Pass the input through the model and return the output
 
-        

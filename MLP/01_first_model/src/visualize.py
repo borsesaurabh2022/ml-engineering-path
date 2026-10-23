@@ -26,11 +26,12 @@ def draw_mlp(model: nn.Module, ax: plt.Axes) -> None:
                         linewidth=2.5 * abs(w) / max_abs, alpha=0.6, zorder=1)
 
     for layer_pos in positions:
-        xs, ys = zip(*layer_pos)
+        xs, ys = zip(*layer_pos, strict=True)
         ax.scatter(xs, ys, s=150, color="white", edgecolors="black", zorder=2)
 
     names = ["input"] + [f"hidden {i}" for i in range(1, len(sizes) - 1)] + ["output"]
-    ax.set_xticks(range(len(sizes)), [f"{name}\n({n})" for name, n in zip(names, sizes)])
+    ax.set_xticks(range(len(sizes)), [f"{name}\n({n})" for name,
+                                      n in zip(names, sizes, strict=True)])
     ax.set_yticks([])
     for side in ("top", "right", "left"):
         ax.spines[side].set_visible(False)

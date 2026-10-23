@@ -12,7 +12,7 @@ if __name__ == "__main__":
         X, y, val_frac=0.15, test_frac=0.15, generator=generator)
 
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
-    for ax, hidden in zip(axes, [[], [16, 16]]):
+    for ax, hidden in zip(axes, [[], [16, 16]], strict=True):
         name = "mlp_" + ("-".join(map(str, hidden)) or "linear")
         model = MLP(2, hidden, 2)
         model.load_state_dict(torch.load(f"checkpoints/{name}.pt", weights_only=True))
